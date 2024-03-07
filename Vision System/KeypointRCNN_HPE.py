@@ -1,3 +1,4 @@
+# install dependencies
 import torch
 import cv2
 import argparse
@@ -25,7 +26,7 @@ transform = transforms.Compose([
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # load the modle on to the computation device and set to eval mode
 model = get_model(min_size=800).to(device).eval()
-SSORT= StrongSORT(model_weights=Path('/Users/cjbertumen/Downloads/PACK-RMPF-Smart-Shelf-System-for-Customer-Behavior-Tracking-in-Supermarkets-main/Vision System/osnet_x0_25_msmt17.pt'),device=device,fp16=False, max_age=2000) #change to directory
+SSORT= StrongSORT(model_weights=Path('D:\Documents\smart_shelf\Smart-Shelf-Repo\Vision System\osnet_x0_25_msmt17.pt'),device=device,fp16=False, max_age=2000) #change to directory
 
 #videos
 cap= cv2.VideoCapture(0) #webcam
@@ -83,7 +84,7 @@ while True:
             keypoints=outputs[0]['keypoints'][i].cpu().detach().numpy()
             raw.append(boxes)
             rawcf.append(scores)
-            if outputs[0]['scores'][i] > 0.8: # proceed if confidence is above 0.9
+            if outputs[0]['scores'][i] > 0.8: # proceed if confidence is above 0.9. This was reduced to 0.8 and allow for the model to identify all people in the camera but not so much that it catches objects that are shaped as people
                 detections.append(boxes)
                 conf.append(scores)
                 classes.append(0) #class-ID 0
@@ -160,8 +161,7 @@ while True:
             VisionResults.append([frame_idx, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, formtimestampcsv])
             pass
         #Exporting Vision Test Results to CSV File:
-        filename= "C:/Users/Jillian Clara TV/Desktop/cctv/processed csv/projectdemo-final.csv" #change to directory
-        end_time=time()
+        filename= "D:\Documents\smart_shelf\Smart-Shelf-Repo\Vision System\\projectdemo-final.csv" #change to directory       
         fps = 1/np.round(end_time- start_time, 2)
         font = cv2.FONT_HERSHEY_SIMPLEX
         timestampnow = datetime.datetime.now()
